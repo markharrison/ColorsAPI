@@ -1,0 +1,57 @@
+name: Container Build & Push - ColorsAPI - Blue Latest
+on:
+  workflow_dispatch:
+  
+env:
+  IMAGENAME: colorsapi
+   
+jobs:
+  app-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+            
+    - name: format IMAGETAG
+      run: |
+        echo "IMAGETAG=b-$(date "+%Y%m%d")-${{github.run_number }}" >> $GITHUB_ENV
+        
+    - uses: cschleiden/replace-tokens@v1
+      with:
+        files: '["appsettings.json"]'
+      env:
+        BuildIdentifier: ${{ env.IMAGETAG }}    
+        Colour1: "blue" 
+        Colour2: "lightblue" 
+        Colour3: "darkblue" 
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Login to GitHub Package Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GHCR_TOKEN }}
+
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v2.2.1
+      with:
+        context: .
+        file: ./Dockerfile
+        platforms: linux/amd64
+        push: true
+        tags:  >
+          ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGENAME }}:${{ env.IMAGETAG }}, 
+          ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGENAME }}:latest,
+          ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGENAME }}:blue,
+          ghcr.io/${{ github.repository_owner }}/${{ env.IMAGENAME }}:${{ env.IMAGETAG }}, 
+          ghcr.io/${{ github.repository_owner }}/${{ env.IMAGENAME }}:latest,
+          ghcr.io/${{ github.repository_owner }}/${{ env.IMAGENAME }}:blue
