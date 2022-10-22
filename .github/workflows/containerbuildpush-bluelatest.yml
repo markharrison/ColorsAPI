@@ -21,9 +21,9 @@ jobs:
         files: '["appsettings.json"]'
       env:
         BuildIdentifier: ${{ env.IMAGETAG }}    
-        Colour1: "blue" 
-        Colour2: "lightblue" 
-        Colour3: "darkblue" 
+        Color1: "blue" 
+        Color2: "lightblue" 
+        Color3: "darkblue" 
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
