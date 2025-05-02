@@ -10,13 +10,13 @@ namespace ColorsAPI.Services
 {
     public class ColorsService
     {
-        private List<ColorsItem> _listColors = new() {  };  // This will only work for a single instance of the service ... to be replaced by datastore
+        private List<ColorsItem> _listColors = new() { };  // This will only work for a single instance of the service ... to be replaced by datastore
 
         private IConfiguration _config;
 
         public ColorsService(IConfiguration config)
         {
- 
+
             _config = config;
 
             _ = Reset();
@@ -127,9 +127,9 @@ namespace ColorsAPI.Services
         {
             await DeleteAll();
 
-            await UpdateById(1, new ColorsItem { Id = 1, Name = _config.GetValue<string>("Color1"), Data = null }); 
-            await UpdateById(2, new ColorsItem { Id = 2, Name = _config.GetValue<string>("Color2"), Data = null });
-            await UpdateById(3, new ColorsItem { Id = 2, Name = _config.GetValue<string>("Color3"), Data = null });
+            await UpdateById(1, new ColorsItem { Id = 1, Name = _config.GetValue<string>("Color1"), Hexcode = "", Data = "" });
+            await UpdateById(2, new ColorsItem { Id = 2, Name = _config.GetValue<string>("Color2"), Hexcode = "", Data = "" });
+            await UpdateById(3, new ColorsItem { Id = 2, Name = _config.GetValue<string>("Color3"), Hexcode = "", Data = "" });
 
             return null;
 
@@ -164,7 +164,7 @@ namespace ColorsAPI.Services
             {
                 strHtml += EchoData("ASPNETCORE_ENVIRONMENT", _config.GetValue<string>("ASPNETCORE_ENVIRONMENT"));
                 strHtml += EchoData("APPLICATIONINSIGHTS_CONNECTION_STRING", _config.GetValue<string>("APPLICATIONINSIGHTS_CONNECTION_STRING"));
-                strHtml += EchoData("Default Colors", _config.GetValue<string>("Color1") + " | " + _config.GetValue<string>("Color2") + " | " + _config.GetValue<string>("Color3"));             
+                strHtml += EchoData("Default Colors", _config.GetValue<string>("Color1") + " | " + _config.GetValue<string>("Color2") + " | " + _config.GetValue<string>("Color3"));
             }
 
             strHtml += "RequestInfo: <br/>";

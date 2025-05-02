@@ -17,12 +17,14 @@ namespace ColorsAPI
 
             builder.Services.AddControllers();
             builder.Services.AddCors();
+
+            builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "Mark Harrison Colors API",
-                    Version = "v1",
+                    Version = "3.0.1",
                     Description = "Colors API",
                     TermsOfService = new Uri("https://github.com/markharrison/ColorsAPI/blob/master/LICENSE"),
                     Contact = new OpenApiContact

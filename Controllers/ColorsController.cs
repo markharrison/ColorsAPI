@@ -58,6 +58,23 @@ namespace ColorsAPI.Controllers
                     return UnprocessableEntity(new ProblemDetails { Status = 422, Title = "Missing a Color Name" });
                 }
 
+                if (colorsItem.Hexcode == null || colorsItem.Hexcode.Length == 0)
+                {
+                    colorsItem.Hexcode = string.Empty;
+                }
+                else
+                {
+                    if (!System.Text.RegularExpressions.Regex.IsMatch(colorsItem.Hexcode, @"^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"))
+                    {
+                        return UnprocessableEntity(new ProblemDetails { Status = 422, Title = "Invalid Hex Code" });
+                    }
+                }
+
+                if (colorsItem.Data == null || colorsItem.Data.Length == 0)
+                {
+                    colorsItem.Data = string.Empty;
+                }
+
                 ColorsItem colorsItemReturn = await _ColorsService.UpdateById(0, colorsItem);
                 _ColorsInserted.Add(colorsItemReturn);
 
@@ -135,6 +152,10 @@ namespace ColorsAPI.Controllers
             if (colorsItemUpdate.Id != colorId)
             {
                 return UnprocessableEntity(new ProblemDetails { Status = 422, Title = "Unprocessable Entity - payload Id doesnt match {colorId}" });
+            }
+            if (colorsItemUpdate.Hexcode != "" && !System.Text.RegularExpressions.Regex.IsMatch(colorsItemUpdate.Hexcode, @"^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"))
+            {
+                return UnprocessableEntity(new ProblemDetails { Status = 422, Title = "Invalid Hex Code" });
             }
 
             ColorsItem colorsItemReturn = await _ColorsService.UpdateById(colorId, colorsItemUpdate);
